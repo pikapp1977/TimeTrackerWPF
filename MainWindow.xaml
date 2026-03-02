@@ -139,7 +139,7 @@
                             
                             <StackPanel Grid.Row="0" Grid.Column="0">
                                 <Label Content="Location:"/>
-                                <ComboBox x:Name="cmbLocation" Height="30" DisplayMemberPath="FacilityName"/>
+                                <ComboBox x:Name="cmbLocation" Height="30" Width="250" HorizontalAlignment="Left" DisplayMemberPath="FacilityName"/>
                             </StackPanel>
                             
                             <StackPanel Grid.Row="0" Grid.Column="1">
