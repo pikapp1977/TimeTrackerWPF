@@ -100,10 +100,10 @@
                             <ListView x:Name="lstLocations" SelectionMode="Single">
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn Header="Facility" Width="280" DisplayMemberBinding="{Binding FacilityName}"/>
-                                        <GridViewColumn Header="Contact" Width="120" DisplayMemberBinding="{Binding ContactName}"/>
-                                        <GridViewColumn Header="Phone" Width="120" DisplayMemberBinding="{Binding ContactPhone}"/>
-                                        <GridViewColumn Header="Pay Rate" Width="120" DisplayMemberBinding="{Binding PayRateDisplay}"/>
+                                        <GridViewColumn Header="Facility" Width="350" DisplayMemberBinding="{Binding FacilityName}"/>
+                                        <GridViewColumn Header="Contact" Width="200" DisplayMemberBinding="{Binding ContactName}"/>
+                                        <GridViewColumn Header="Phone" Width="150" DisplayMemberBinding="{Binding ContactPhone}"/>
+                                        <GridViewColumn Header="Pay Rate" Width="150" DisplayMemberBinding="{Binding PayRateDisplay}"/>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
