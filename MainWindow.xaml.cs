@@ -410,6 +410,25 @@ namespace TimeTrackerWPF
 
             cmbInvoiceLocation.ItemsSource = null;
             cmbInvoiceLocation.ItemsSource = locations;
+
+            // Auto-resize columns to fit content
+            AutoSizeGridViewColumns(lstLocations);
+        }
+
+        private void AutoSizeGridViewColumns(ListView listView)
+        {
+            if (listView.View is GridView gridView)
+            {
+                foreach (var column in gridView.Columns)
+                {
+                    // Set to NaN to enable auto-sizing
+                    if (double.IsNaN(column.Width))
+                    {
+                        column.Width = column.ActualWidth;
+                    }
+                    column.Width = double.NaN;
+                }
+            }
         }
 
         private void RefreshTimeEntriesList()
