@@ -206,17 +206,23 @@
                                         <GridViewColumn Header="Hours" Width="80" DisplayMemberBinding="{Binding HoursWorked}"/>
                                         <GridViewColumn Header="Daily Pay" Width="100" DisplayMemberBinding="{Binding DailyPayDisplay}"/>
                                         <GridViewColumn Header="Notes" Width="200" DisplayMemberBinding="{Binding Notes}"/>
-                                        <GridViewColumn Header="Locked" Width="60">
+                                        <GridViewColumn Width="60">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Locked" HorizontalAlignment="Center"/>
+                                            </GridViewColumn.Header>
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding LockedDisplay}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding LockedDisplay}" TextAlignment="Center" HorizontalAlignment="Stretch"/>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="Archived" Width="70">
+                                        <GridViewColumn Width="70">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Archived" HorizontalAlignment="Center"/>
+                                            </GridViewColumn.Header>
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding ArchivedDisplay}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding ArchivedDisplay}" TextAlignment="Center" HorizontalAlignment="Stretch"/>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
