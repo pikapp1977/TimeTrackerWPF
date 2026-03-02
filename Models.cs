@@ -47,15 +47,9 @@ namespace TimeTrackerWPF
 
         public string DailyPayDisplay => $"${DailyPay:F2}";
         
-        public string StatusDisplay
-        {
-            get
-            {
-                if (Archived) return "📦";
-                if (Locked) return "🔒";
-                return "";
-            }
-        }
+        // Separate display properties for Locked and Archived columns
+        public string LockedDisplay => Locked ? "🔒" : "";
+        public string ArchivedDisplay => Archived ? "📦" : "";
     }
 
     public class BusinessSettings

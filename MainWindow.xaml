@@ -116,7 +116,7 @@
             <TabItem Header="Time Entry">
                 <DockPanel>
                     <!-- Entry Form -->
-                    <GroupBox DockPanel.Dock="Top" Header="Add Time Entry" Height="220">
+                    <GroupBox DockPanel.Dock="Top" Header="Add Time Entry" Height="250">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -206,7 +206,8 @@
                                         <GridViewColumn Header="Hours" Width="80" DisplayMemberBinding="{Binding HoursWorked}"/>
                                         <GridViewColumn Header="Daily Pay" Width="100" DisplayMemberBinding="{Binding DailyPayDisplay}"/>
                                         <GridViewColumn Header="Notes" Width="200" DisplayMemberBinding="{Binding Notes}"/>
-                                        <GridViewColumn Header="Status" Width="80" DisplayMemberBinding="{Binding StatusDisplay}"/>
+                                        <GridViewColumn Header="Locked" Width="60" DisplayMemberBinding="{Binding LockedDisplay}"/>
+                                        <GridViewColumn Header="Archived" Width="70" DisplayMemberBinding="{Binding ArchivedDisplay}"/>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
