@@ -28,13 +28,29 @@ jobs:
 
       - name: Download and install Inno Setup
         run: |
-          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile is_setup.exe
-          Start-Process -FilePath ".\is_setup.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-" -Wait
+          $innoSetupUrl = "https://files.jrsoftware.org/is/6/innosetup-6.2.2.exe"
+          Invoke-WebRequest -Uri $innoSetupUrl -OutFile "innosetup-installer.exe" -UseBasicParsing
+          Start-Process -FilePath ".\innosetup-installer.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-" -Wait
+          Start-Sleep -Seconds 5
+
+      - name: Verify Inno Setup installation
+        run: |
+          $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          if (Test-Path $isccPath) {
+            Write-Host "Inno Setup found at: $isccPath"
+          } else {
+            Write-Error "Inno Setup not found!"
+            exit 1
+          }
 
       - name: Create installer with Inno Setup
         run: |
           $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
           & $iscc TimeTrackerWPFSetup.iss
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Inno Setup compilation failed with exit code $LASTEXITCODE"
+            exit 1
+          }
 
       - name: Upload standalone executable
         uses: actions/upload-artifact@v4
