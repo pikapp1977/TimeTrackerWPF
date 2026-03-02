@@ -206,8 +206,20 @@
                                         <GridViewColumn Header="Hours" Width="80" DisplayMemberBinding="{Binding HoursWorked}"/>
                                         <GridViewColumn Header="Daily Pay" Width="100" DisplayMemberBinding="{Binding DailyPayDisplay}"/>
                                         <GridViewColumn Header="Notes" Width="200" DisplayMemberBinding="{Binding Notes}"/>
-                                        <GridViewColumn Header="Locked" Width="60" DisplayMemberBinding="{Binding LockedDisplay}"/>
-                                        <GridViewColumn Header="Archived" Width="70" DisplayMemberBinding="{Binding ArchivedDisplay}"/>
+                                        <GridViewColumn Header="Locked" Width="60">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding LockedDisplay}" HorizontalAlignment="Center"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Archived" Width="70">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding ArchivedDisplay}" HorizontalAlignment="Center"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
