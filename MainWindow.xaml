@@ -5,6 +5,13 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize">
     
+    <Window.Resources>
+        <Style x:Key="CenteredCellStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    
     <DockPanel>
         <!-- Menu Bar -->
         <Menu DockPanel.Dock="Top">
@@ -212,9 +219,9 @@
                                             </GridViewColumn.Header>
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <TextBlock Text="{Binding LockedDisplay}" TextAlignment="Center"/>
-                                                    </Grid>
+                                                    <Border HorizontalAlignment="Stretch">
+                                                        <TextBlock Text="{Binding LockedDisplay}" HorizontalAlignment="Center"/>
+                                                    </Border>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -224,9 +231,9 @@
                                             </GridViewColumn.Header>
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <TextBlock Text="{Binding ArchivedDisplay}" TextAlignment="Center"/>
-                                                    </Grid>
+                                                    <Border HorizontalAlignment="Stretch">
+                                                        <TextBlock Text="{Binding ArchivedDisplay}" HorizontalAlignment="Center"/>
+                                                    </Border>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
