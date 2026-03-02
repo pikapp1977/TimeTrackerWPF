@@ -106,7 +106,7 @@
                             
                             <ListView x:Name="lstLocations" SelectionMode="Single">
                                 <ListView.View>
-                                    <GridView>
+                                    <GridView AllowsColumnReorder="False">
                                         <GridViewColumn Header="Facility" DisplayMemberBinding="{Binding FacilityName}"/>
                                         <GridViewColumn Header="Contact" DisplayMemberBinding="{Binding ContactName}"/>
                                         <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding ContactPhone}"/>
@@ -210,7 +210,7 @@
                                     </Style>
                                 </ListView.ItemContainerStyle>
                                 <ListView.View>
-                                    <GridView>
+                                    <GridView AllowsColumnReorder="False">
                                         <GridViewColumn Header="Date" Width="100" DisplayMemberBinding="{Binding Date}"/>
                                         <GridViewColumn Header="Location" Width="250" DisplayMemberBinding="{Binding LocationName}"/>
                                         <GridViewColumn Header="Arrival" Width="100" DisplayMemberBinding="{Binding ArrivalTime}"/>
