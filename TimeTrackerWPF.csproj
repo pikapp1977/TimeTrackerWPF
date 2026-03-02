@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../timetracker/Version.props" />
+  <Import Project="Version.props" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
