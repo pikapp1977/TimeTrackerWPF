@@ -28,4 +28,11 @@
     <PackageReference Include="QuestPDF" Version="2024.12.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Exclude test files from main project -->
+    <Compile Remove="TimeTrackerWPF.Tests\**" />
+    <EmbeddedResource Remove="TimeTrackerWPF.Tests\**" />
+    <None Remove="TimeTrackerWPF.Tests\**" />
+  </ItemGroup>
+
 </Project>
