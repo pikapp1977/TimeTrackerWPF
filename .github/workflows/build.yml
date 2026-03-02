@@ -1,0 +1,49 @@
+name: Build WPF Installer
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore TimeTrackerWPF.csproj
+
+      - name: Publish application
+        run: dotnet publish TimeTrackerWPF.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+
+      - name: Download and install Inno Setup
+        run: |
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile is_setup.exe
+          Start-Process -FilePath ".\is_setup.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-" -Wait
+
+      - name: Create installer with Inno Setup
+        run: |
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          & $iscc TimeTrackerWPFSetup.iss
+
+      - name: Upload standalone executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: TimeTrackerWPF-Portable
+          path: bin/Release/net8.0-windows/win-x64/publish/TimeTrackerWPF.exe
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: TimeTrackerWPF-Installer
+          path: TimeTrackerWPFSetup_v*.exe

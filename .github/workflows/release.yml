@@ -1,0 +1,95 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore TimeTrackerWPF.csproj
+
+      - name: Publish application
+        run: dotnet publish TimeTrackerWPF.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+
+      - name: Download and install Inno Setup
+        run: |
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile is_setup.exe
+          Start-Process -FilePath ".\is_setup.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-" -Wait
+
+      - name: Create installer with Inno Setup
+        run: |
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          & $iscc TimeTrackerWPFSetup.iss
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: TimeTracker WPF ${{ github.ref_name }}
+          body: |
+            ## TimeTracker WPF ${{ github.ref_name }}
+            
+            ### Downloads
+            - **Installer** (Recommended): TimeTrackerWPFSetup.exe
+            - **Portable**: TimeTrackerWPF.exe (No installation needed)
+            
+            ### Features
+            - Location management with full contact information
+            - Time entry tracking with lock/archive system
+            - Professional Excel and PDF invoice generation
+            - Business settings configuration
+            - Shared database with Windows Forms version
+            
+            ### Requirements
+            - Windows 10 or later (64-bit)
+            - 200 MB disk space
+            - No additional software needed (self-contained)
+            
+            ### Installation
+            1. Download the installer
+            2. Run and follow the wizard
+            3. Launch from Start Menu
+          draft: false
+          prerelease: false
+
+      - name: Upload Installer to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./TimeTrackerWPFSetup_v1.0.41.exe
+          asset_name: TimeTrackerWPFSetup_v${{ github.ref_name }}.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Portable Executable to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/Release/net8.0-windows/win-x64/publish/TimeTrackerWPF.exe
+          asset_name: TimeTrackerWPF-Portable-${{ github.ref_name }}.exe
+          asset_content_type: application/octet-stream
