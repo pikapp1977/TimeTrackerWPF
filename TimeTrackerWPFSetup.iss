@@ -1,5 +1,5 @@
 #define MyAppName "Time Tracker WPF"
-#define MyAppVersion "1.0.41"
+#define MyAppVersion "1.0.42"
 #define MyAppPublisher "Personal"
 #define MyAppExeName "TimeTrackerWPF.exe"
 

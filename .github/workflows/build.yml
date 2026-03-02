@@ -26,6 +26,26 @@ jobs:
       - name: Publish application
         run: dotnet publish TimeTrackerWPF.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 
+      - name: Verify publish output
+        run: |
+          Write-Host "Checking publish directory..."
+          $publishPath = "bin\Release\net8.0-windows\win-x64\publish"
+          if (Test-Path $publishPath) {
+            Write-Host "Publish directory exists"
+            Get-ChildItem $publishPath | ForEach-Object { Write-Host "  - $($_.Name)" }
+          } else {
+            Write-Error "Publish directory not found at: $publishPath"
+            exit 1
+          }
+          
+          $exePath = "$publishPath\TimeTrackerWPF.exe"
+          if (Test-Path $exePath) {
+            Write-Host "TimeTrackerWPF.exe found!"
+          } else {
+            Write-Error "TimeTrackerWPF.exe not found at: $exePath"
+            exit 1
+          }
+
       - name: Download and install Inno Setup
         run: |
           $innoSetupUrl = "https://files.jrsoftware.org/is/6/innosetup-6.2.2.exe"
@@ -46,11 +66,19 @@ jobs:
       - name: Create installer with Inno Setup
         run: |
           $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          & $iscc TimeTrackerWPFSetup.iss
+          Write-Host "Running Inno Setup compiler..."
+          & $iscc TimeTrackerWPFSetup.iss 2>&1 | Tee-Object -Variable isccOutput
+          Write-Host "Inno Setup output:"
+          Write-Host $isccOutput
+          
           if ($LASTEXITCODE -ne 0) {
             Write-Error "Inno Setup compilation failed with exit code $LASTEXITCODE"
+            Write-Host "Full output above for debugging"
             exit 1
           }
+          
+          Write-Host "Checking for generated installer..."
+          Get-ChildItem TimeTrackerWPFSetup_v*.exe | ForEach-Object { Write-Host "  Found: $($_.Name)" }
 
       - name: Upload standalone executable
         uses: actions/upload-artifact@v4
