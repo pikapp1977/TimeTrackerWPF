@@ -47,9 +47,24 @@ namespace TimeTrackerWPF
             UpdateClearAllButtonVisibility();
             
             txtDbPath.Text = dbPath;
+            UpdateDatabaseSize();
             dtpDate.SelectedDate = DateTime.Today;
             dtpStartDate.SelectedDate = DateTime.Today;
             dtpEndDate.SelectedDate = DateTime.Today;
+        }
+
+        private void UpdateDatabaseSize()
+        {
+            if (File.Exists(dbPath))
+            {
+                FileInfo fileInfo = new FileInfo(dbPath);
+                double sizeInMB = fileInfo.Length / (1024.0 * 1024.0);
+                txtDbSize.Text = $"Database Size: {sizeInMB:F2} MB";
+            }
+            else
+            {
+                txtDbSize.Text = "Database Size: N/A";
+            }
         }
 
         private void InitializeControls()
@@ -432,34 +447,12 @@ namespace TimeTrackerWPF
 
         private decimal CalculateDailyPay(Location location, string arrival, string departure)
         {
-            double hours = CalculateHoursWorked(arrival, departure);
-
-            if (location.PayRateType == "Per Day")
-            {
-                return hours >= 8 ? location.PayRate : location.PayRate * (decimal)(hours / 8.0);
-            }
-            return location.PayRate * (decimal)hours;
+            return CalculationHelpers.CalculateDailyPay(location, arrival, departure);
         }
 
         private double CalculateHoursWorked(string arrival, string departure)
         {
-            try
-            {
-                DateTime arrivalTime = DateTime.Parse(arrival);
-                DateTime departureTime = DateTime.Parse(departure);
-
-                if (departureTime < arrivalTime)
-                {
-                    departureTime = departureTime.AddDays(1);
-                }
-
-                TimeSpan diff = departureTime - arrivalTime;
-                return diff.TotalHours;
-            }
-            catch
-            {
-                return 0;
-            }
+            return CalculationHelpers.CalculateHoursWorked(arrival, departure);
         }
 
         #endregion

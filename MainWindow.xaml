@@ -321,7 +321,10 @@
                     </GroupBox>
                     
                     <GroupBox DockPanel.Dock="Top" Header="Database Location" Width="550" HorizontalAlignment="Left" Margin="5">
-                        <TextBlock x:Name="txtDbPath" Foreground="Blue" TextWrapping="Wrap" Margin="5"/>
+                        <StackPanel>
+                            <TextBlock x:Name="txtDbPath" Foreground="Blue" TextWrapping="Wrap" Margin="5"/>
+                            <TextBlock x:Name="txtDbSize" Foreground="Gray" Margin="5,0,5,5"/>
+                        </StackPanel>
                     </GroupBox>
                 </DockPanel>
             </TabItem>
