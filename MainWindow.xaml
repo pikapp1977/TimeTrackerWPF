@@ -204,6 +204,11 @@
                             </StackPanel>
                             
                             <ListView x:Name="lstTimeEntries" SelectionMode="Single">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Date" Width="100" DisplayMemberBinding="{Binding Date}"/>
