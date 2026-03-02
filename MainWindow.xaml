@@ -79,7 +79,7 @@
                                 
                                 <StackPanel Grid.Column="0">
                                     <Label Content="Pay Rate ($):"/>
-                                    <TextBox x:Name="txtPayRate" Height="30"/>
+                                    <TextBox x:Name="txtPayRate" Height="30" LostFocus="TxtPayRate_LostFocus"/>
                                 </StackPanel>
                                 
                                 <StackPanel Grid.Column="1">

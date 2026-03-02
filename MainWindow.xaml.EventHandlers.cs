@@ -29,6 +29,17 @@ namespace TimeTrackerWPF
 
         #region Location Event Handlers
 
+        private void TxtPayRate_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox && !string.IsNullOrWhiteSpace(textBox.Text))
+            {
+                if (decimal.TryParse(textBox.Text, out decimal payRate))
+                {
+                    textBox.Text = payRate.ToString("F2");
+                }
+            }
+        }
+
         private void BtnAddLocation_Click(object sender, RoutedEventArgs e)
         {
             string facilityName = txtFacilityName.Text.Trim();
@@ -123,6 +134,7 @@ namespace TimeTrackerWPF
             var txtSt = new TextBox { Text = location.State, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
             var txtZp = new TextBox { Text = location.Zip, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
             var txtRate = new TextBox { Text = location.PayRate.ToString("F2"), Height = 30, Margin = new Thickness(0, 5, 0, 10) };
+            txtRate.LostFocus += TxtPayRate_LostFocus;
 
             var lblType = new Label { Content = "Pay Rate Type:", Margin = new Thickness(0, 5, 0, 0) };
             var cmbType = new ComboBox { Margin = new Thickness(0, 5, 0, 10), Height = 30 };
