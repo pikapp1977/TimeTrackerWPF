@@ -116,7 +116,7 @@ namespace TimeTrackerWPF
             {
                 Title = "Edit Location",
                 Width = 500,
-                Height = 550,
+                Height = 600,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
                 ResizeMode = ResizeMode.NoResize
