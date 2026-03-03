@@ -147,10 +147,12 @@ namespace TimeTrackerWPF
                 {
                     double hours = CalculateHoursWorked(entry.ArrivalTime, entry.DepartureTime);
                     string description = "Worked " + hours.ToString("F2") + " hours (" + entry.ArrivalTime + " - " + entry.DepartureTime + ")";
+                    
+                    decimal quantity = location.PayRateType == "Per Day" ? 1 : (decimal)hours;
 
                     worksheet.Cell(row, 1).Value = entry.Date;
                     worksheet.Cell(row, 2).Value = description;
-                    worksheet.Cell(row, 3).Value = 1;
+                    worksheet.Cell(row, 3).Value = quantity;
                     worksheet.Cell(row, 4).Value = (double)entry.DailyPay;
                     worksheet.Cell(row, 4).Style.NumberFormat.Format = "$#,##0.00";
 
@@ -301,10 +303,12 @@ namespace TimeTrackerWPF
                                 {
                                     double hours = CalculateHoursWorked(entry.ArrivalTime, entry.DepartureTime);
                                     string description = $"Worked {hours:F2} hours ({entry.ArrivalTime} - {entry.DepartureTime})";
+                                    
+                                    decimal quantity = location.PayRateType == "Per Day" ? 1 : (decimal)hours;
 
                                     table.Cell().BorderBottom(0.5f).Padding(5).Text(entry.Date);
                                     table.Cell().BorderBottom(0.5f).Padding(5).Text(description);
-                                    table.Cell().BorderBottom(0.5f).Padding(5).Text("1");
+                                    table.Cell().BorderBottom(0.5f).Padding(5).Text(quantity.ToString("F2"));
                                     table.Cell().BorderBottom(0.5f).Padding(5).Text($"${entry.DailyPay:F2}");
                                 }
 
