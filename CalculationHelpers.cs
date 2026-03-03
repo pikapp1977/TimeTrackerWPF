@@ -10,12 +10,12 @@ namespace TimeTrackerWPF
         /// </summary>
         public static decimal CalculateDailyPay(Location location, string arrival, string departure)
         {
-            double hours = CalculateHoursWorked(arrival, departure);
-
             if (location.PayRateType == "Per Day")
             {
-                return hours >= 8 ? location.PayRate : location.PayRate * (decimal)(hours / 8.0);
+                return location.PayRate;
             }
+            
+            double hours = CalculateHoursWorked(arrival, departure);
             return location.PayRate * (decimal)hours;
         }
 
