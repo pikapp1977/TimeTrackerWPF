@@ -115,36 +115,36 @@ namespace TimeTrackerWPF
             var dialog = new Window
             {
                 Title = "Edit Location",
-                Width = 600,
-                Height = 700,
+                Width = 500,
+                Height = 550,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
                 ResizeMode = ResizeMode.NoResize
             };
 
-            var stack = new StackPanel { Margin = new Thickness(20) };
+            var stack = new StackPanel { Margin = new Thickness(15) };
 
-            // Create textboxes for each field
-            var txtFac = new TextBox { Text = location.FacilityName, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtCon = new TextBox { Text = location.ContactName, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtEm = new TextBox { Text = location.ContactEmail, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtPh = new TextBox { Text = location.ContactPhone, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtAddr = new TextBox { Text = location.Address, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtCit = new TextBox { Text = location.City, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtSt = new TextBox { Text = location.State, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtZp = new TextBox { Text = location.Zip, Height = 30, Margin = new Thickness(0, 5, 0, 10) };
-            var txtRate = new TextBox { Text = location.PayRate.ToString("F2"), Height = 30, Margin = new Thickness(0, 5, 0, 10) };
+            // Create textboxes for each field with reduced margins and height
+            var txtFac = new TextBox { Text = location.FacilityName, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtCon = new TextBox { Text = location.ContactName, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtEm = new TextBox { Text = location.ContactEmail, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtPh = new TextBox { Text = location.ContactPhone, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtAddr = new TextBox { Text = location.Address, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtCit = new TextBox { Text = location.City, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtSt = new TextBox { Text = location.State, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtZp = new TextBox { Text = location.Zip, Height = 25, Margin = new Thickness(0, 2, 0, 5) };
+            var txtRate = new TextBox { Text = location.PayRate.ToString("F2"), Height = 25, Margin = new Thickness(0, 2, 0, 5) };
             txtRate.LostFocus += TxtPayRate_LostFocus;
 
-            var lblType = new Label { Content = "Pay Rate Type:", Margin = new Thickness(0, 5, 0, 0) };
-            var cmbType = new ComboBox { Margin = new Thickness(0, 5, 0, 10), Height = 30 };
+            var lblType = new Label { Content = "Pay Rate Type:", Margin = new Thickness(0, 2, 0, 0), Padding = new Thickness(0) };
+            var cmbType = new ComboBox { Margin = new Thickness(0, 2, 0, 5), Height = 25 };
             cmbType.Items.Add(new ComboBoxItem { Content = "Per Hour" });
             cmbType.Items.Add(new ComboBoxItem { Content = "Per Day" });
             cmbType.SelectedIndex = location.PayRateType == "Per Hour" ? 0 : 1;
 
-            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 20, 0, 0) };
-            var btnSave = new Button { Content = "Save", Width = 100, Margin = new Thickness(5) };
-            var btnCancel = new Button { Content = "Cancel", Width = 100, Margin = new Thickness(5) };
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
+            var btnSave = new Button { Content = "Save", Width = 80, Height = 30, Margin = new Thickness(5) };
+            var btnCancel = new Button { Content = "Cancel", Width = 80, Height = 30, Margin = new Thickness(5) };
 
             btnSave.Click += (s, e) =>
             {
@@ -174,23 +174,23 @@ namespace TimeTrackerWPF
 
             btnCancel.Click += (s, e) => dialog.Close();
 
-            stack.Children.Add(new Label { Content = "Facility Name:" });
+            stack.Children.Add(new Label { Content = "Facility Name:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtFac);
-            stack.Children.Add(new Label { Content = "Contact Name:" });
+            stack.Children.Add(new Label { Content = "Contact Name:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtCon);
-            stack.Children.Add(new Label { Content = "Contact Email:" });
+            stack.Children.Add(new Label { Content = "Contact Email:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtEm);
-            stack.Children.Add(new Label { Content = "Contact Phone:" });
+            stack.Children.Add(new Label { Content = "Contact Phone:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtPh);
-            stack.Children.Add(new Label { Content = "Street Address:" });
+            stack.Children.Add(new Label { Content = "Street Address:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtAddr);
-            stack.Children.Add(new Label { Content = "City:" });
+            stack.Children.Add(new Label { Content = "City:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtCit);
-            stack.Children.Add(new Label { Content = "State:" });
+            stack.Children.Add(new Label { Content = "State:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtSt);
-            stack.Children.Add(new Label { Content = "Zip:" });
+            stack.Children.Add(new Label { Content = "Zip:", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtZp);
-            stack.Children.Add(new Label { Content = "Pay Rate ($):" });
+            stack.Children.Add(new Label { Content = "Pay Rate ($):", Padding = new Thickness(0), Margin = new Thickness(0, 2, 0, 0) });
             stack.Children.Add(txtRate);
             stack.Children.Add(lblType);
             stack.Children.Add(cmbType);
