@@ -299,22 +299,36 @@ namespace TimeTrackerWPF
                                 });
 
                                 // Data rows
+                                int entryIndex = 0;
                                 foreach (var entry in entries.OrderBy(e => e.Date))
                                 {
+                                    entryIndex++;
+                                    bool isLastEntry = entryIndex == entries.Count;
+                                    
                                     double hours = CalculateHoursWorked(entry.ArrivalTime, entry.DepartureTime);
                                     string description = $"Worked {hours:F2} hours ({entry.ArrivalTime} - {entry.DepartureTime})";
                                     
                                     decimal quantity = location.PayRateType == "Per Day" ? 1 : (decimal)hours;
 
-                                    table.Cell().Padding(5).Text(entry.Date);
-                                    table.Cell().Padding(5).Text(description);
-                                    table.Cell().Padding(5).Text(quantity.ToString("F2"));
-                                    table.Cell().Padding(5).Text($"${entry.DailyPay:F2}");
+                                    if (isLastEntry)
+                                    {
+                                        table.Cell().BorderBottom(0.5f).Padding(5).Text(entry.Date);
+                                        table.Cell().BorderBottom(0.5f).Padding(5).Text(description);
+                                        table.Cell().BorderBottom(0.5f).Padding(5).Text(quantity.ToString("F2"));
+                                        table.Cell().BorderBottom(0.5f).Padding(5).Text($"${entry.DailyPay:F2}");
+                                    }
+                                    else
+                                    {
+                                        table.Cell().Padding(5).Text(entry.Date);
+                                        table.Cell().Padding(5).Text(description);
+                                        table.Cell().Padding(5).Text(quantity.ToString("F2"));
+                                        table.Cell().Padding(5).Text($"${entry.DailyPay:F2}");
+                                    }
                                 }
 
                                 // Total row
-                                table.Cell().ColumnSpan(3).BorderBottom(0.5f).Padding(5).AlignRight().Text("TOTAL:").Bold().FontSize(12);
-                                table.Cell().BorderBottom(0.5f).Padding(5).Text($"${total:F2}").Bold().FontSize(12);
+                                table.Cell().ColumnSpan(3).Padding(5).AlignRight().Text("TOTAL:").Bold().FontSize(12);
+                                table.Cell().Padding(5).Text($"${total:F2}").Bold().FontSize(12);
                             });
 
                             // Notes section
