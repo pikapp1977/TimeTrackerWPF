@@ -27,8 +27,8 @@ namespace TimeTrackerWPF
         public string DepartureTime { get; set; } = string.Empty;
         public decimal DailyPay { get; set; }
         public string Notes { get; set; } = string.Empty;
-        public bool Locked { get; set; }
-        public bool Archived { get; set; }
+        public bool Billed { get; set; }
+        public bool Paid { get; set; }
 
         public string HoursWorked
         {
@@ -47,9 +47,8 @@ namespace TimeTrackerWPF
 
         public string DailyPayDisplay => $"${DailyPay:F2}";
         
-        // Separate display properties for Locked and Archived columns
-        public string LockedDisplay => Locked ? "🔒" : "";
-        public string ArchivedDisplay => Archived ? "📦" : "";
+        public string BilledDisplay => Billed ? "✓" : "";
+        public string PaidDisplay => Paid ? "✓" : "";
     }
 
     public class BusinessSettings

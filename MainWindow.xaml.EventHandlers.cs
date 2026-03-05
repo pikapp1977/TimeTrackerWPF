@@ -254,24 +254,24 @@ namespace TimeTrackerWPF
             UpdateTotals();
         }
 
-        private void BtnToggleLock_Click(object sender, RoutedEventArgs e)
+        private void BtnToggleBilled_Click(object sender, RoutedEventArgs e)
         {
             if (lstTimeEntries.SelectedItem is TimeEntry entry)
             {
-                timeEntryService.ToggleLock(entry.Id);
+                timeEntryService.ToggleBilled(entry.Id);
                 LoadTimeEntries();
                 RefreshTimeEntriesList();
             }
         }
 
-        private void BtnArchive_Click(object sender, RoutedEventArgs e)
+        private void BtnTogglePaid_Click(object sender, RoutedEventArgs e)
         {
             if (lstTimeEntries.SelectedItem is TimeEntry entry)
             {
-                var result = timeEntryService.ToggleArchive(entry.Id);
+                var result = timeEntryService.TogglePaid(entry.Id);
                 if (!result.Success)
                 {
-                    MessageBox.Show(result.Message, "Cannot Archive", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(result.Message, "Cannot Mark Paid", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 LoadTimeEntries();
                 RefreshTimeEntriesList();
@@ -293,21 +293,21 @@ namespace TimeTrackerWPF
         private void BtnClearAll_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show(
-                "Are you sure you want to delete all unlocked time entries? Locked entries will be preserved.",
+                "Are you sure you want to delete all unbilled time entries? Billed entries will be preserved.",
                 "Confirm",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
-                timeEntryService.DeleteUnlockedEntries();
+                timeEntryService.DeleteUnbilledEntries();
                 LoadTimeEntries();
                 RefreshTimeEntriesList();
                 UpdateTotals();
             }
         }
 
-        private void ChkShowArchived_Changed(object sender, RoutedEventArgs e)
+        private void ChkShowPaid_Changed(object sender, RoutedEventArgs e)
         {
             LoadTimeEntries();
             RefreshTimeEntriesList();

@@ -193,14 +193,14 @@
                     <GroupBox Header="Time Entries" Margin="5">
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                                <Button Content="Lock/Unlock" Click="BtnToggleLock_Click"/>
-                                <Button Content="Archive/Unarchive" Click="BtnArchive_Click"/>
+                                <Button Content="Bill/Unbill" Click="BtnToggleBilled_Click"/>
+                                <Button Content="Mark Paid/Unpaid" Click="BtnTogglePaid_Click"/>
                                 <Button Content="Delete Selected" Click="BtnDeleteEntry_Click"/>
-                                <Button x:Name="btnClearAll" Content="Clear All Unlocked" 
+                                <Button x:Name="btnClearAll" Content="Clear All Unbilled" 
                                         Click="BtnClearAll_Click" Visibility="Collapsed"/>
-                                <CheckBox x:Name="chkShowArchived" Content="Show Archived" 
+                                <CheckBox x:Name="chkShowArchived" Content="Show Paid" 
                                           VerticalAlignment="Center" Margin="20,0,0,0"
-                                          Checked="ChkShowArchived_Changed" Unchecked="ChkShowArchived_Changed"/>
+                                          Checked="ChkShowPaid_Changed" Unchecked="ChkShowPaid_Changed"/>
                             </StackPanel>
                             
                             <ListView x:Name="lstTimeEntries" SelectionMode="Single">
@@ -220,24 +220,24 @@
                                         <GridViewColumn Header="Notes" Width="200" DisplayMemberBinding="{Binding Notes}"/>
                                         <GridViewColumn Width="60">
                                             <GridViewColumn.Header>
-                                                <GridViewColumnHeader Content="Locked" HorizontalContentAlignment="Center"/>
+                                                <GridViewColumnHeader Content="Billed" HorizontalContentAlignment="Center"/>
                                             </GridViewColumn.Header>
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Border HorizontalAlignment="Stretch">
-                                                        <TextBlock Text="{Binding LockedDisplay}" HorizontalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding BilledDisplay}" HorizontalAlignment="Center"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
                                         <GridViewColumn Width="70">
                                             <GridViewColumn.Header>
-                                                <GridViewColumnHeader Content="Archived" HorizontalContentAlignment="Center"/>
+                                                <GridViewColumnHeader Content="Paid" HorizontalContentAlignment="Center"/>
                                             </GridViewColumn.Header>
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Border HorizontalAlignment="Stretch">
-                                                        <TextBlock Text="{Binding ArchivedDisplay}" HorizontalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding PaidDisplay}" HorizontalAlignment="Center"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
@@ -347,7 +347,7 @@
                                 </StackPanel>
                             </Grid>
                             
-                            <CheckBox x:Name="chkShowClearAll" Content="Show 'Clear All Unlocked' button in Time Entry tab" Margin="5,10,5,5"/>
+                            <CheckBox x:Name="chkShowClearAll" Content="Show 'Clear All Unbilled' button in Time Entry tab" Margin="5,10,5,5"/>
                             
                             <Button Content="Save Settings" Click="BtnSaveSettings_Click" 
                                     HorizontalAlignment="Left" Width="120" Margin="5,10,5,5"/>

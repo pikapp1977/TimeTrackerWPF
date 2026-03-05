@@ -11,146 +11,141 @@ namespace TimeTrackerWPF
             dbPath = databasePath;
         }
 
-        public bool IsEntryLocked(int id)
+        public bool IsEntryBilled(int id)
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
             
-            command.CommandText = "SELECT Locked FROM TimeEntries WHERE Id = $id";
+            command.CommandText = "SELECT Billed FROM TimeEntries WHERE Id = $id";
             command.Parameters.AddWithValue("$id", id);
             var result = command.ExecuteScalar();
             
             return result != null && !Convert.IsDBNull(result) && Convert.ToInt32(result) == 1;
         }
 
-        public bool IsEntryArchived(int id)
+        public bool IsEntryPaid(int id)
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
             
-            command.CommandText = "SELECT Archived FROM TimeEntries WHERE Id = $id";
+            command.CommandText = "SELECT Paid FROM TimeEntries WHERE Id = $id";
             command.Parameters.AddWithValue("$id", id);
             var result = command.ExecuteScalar();
             
             return result != null && !Convert.IsDBNull(result) && Convert.ToInt32(result) == 1;
         }
 
-        public void ToggleLock(int id)
+        public void ToggleBilled(int id)
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
             
-            // Get current lock status
-            command.CommandText = "SELECT Locked FROM TimeEntries WHERE Id = $id";
+            command.CommandText = "SELECT Billed FROM TimeEntries WHERE Id = $id";
             command.Parameters.AddWithValue("$id", id);
             var result = command.ExecuteScalar();
-            int currentLock = result != null && !Convert.IsDBNull(result) ? Convert.ToInt32(result) : 0;
+            int currentBilled = result != null && !Convert.IsDBNull(result) ? Convert.ToInt32(result) : 0;
             
-            // Toggle lock
-            int newLock = currentLock == 1 ? 0 : 1;
-            command.CommandText = "UPDATE TimeEntries SET Locked = $locked WHERE Id = $id";
+            int newBilled = currentBilled == 1 ? 0 : 1;
+            command.CommandText = "UPDATE TimeEntries SET Billed = $billed WHERE Id = $id";
             command.Parameters.Clear();
-            command.Parameters.AddWithValue("$locked", newLock);
+            command.Parameters.AddWithValue("$billed", newBilled);
             command.Parameters.AddWithValue("$id", id);
             command.ExecuteNonQuery();
         }
 
-        public ArchiveResult ToggleArchive(int id)
+        public PaidResult TogglePaid(int id)
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
             
-            // Get current lock and archive status
-            command.CommandText = "SELECT Locked, Archived FROM TimeEntries WHERE Id = $id";
+            command.CommandText = "SELECT Billed, Paid FROM TimeEntries WHERE Id = $id";
             command.Parameters.AddWithValue("$id", id);
             using var reader = command.ExecuteReader();
             
             if (reader.Read())
             {
-                int locked = !reader.IsDBNull(0) ? reader.GetInt32(0) : 0;
-                int archived = !reader.IsDBNull(1) ? reader.GetInt32(1) : 0;
+                int billed = !reader.IsDBNull(0) ? reader.GetInt32(0) : 0;
+                int paid = !reader.IsDBNull(1) ? reader.GetInt32(1) : 0;
                 reader.Close();
                 
-                // If trying to archive (not currently archived), check if locked
-                if (archived == 0 && locked == 0)
+                if (paid == 0 && billed == 0)
                 {
-                    return new ArchiveResult 
+                    return new PaidResult 
                     { 
                         Success = false, 
-                        Message = "This entry must be locked before it can be archived." 
+                        Message = "This entry must be billed before it can be marked as paid." 
                     };
                 }
                 
-                // Toggle archive status
-                int newArchive = archived == 1 ? 0 : 1;
-                command.CommandText = "UPDATE TimeEntries SET Archived = $archived WHERE Id = $id";
+                int newPaid = paid == 1 ? 0 : 1;
+                command.CommandText = "UPDATE TimeEntries SET Paid = $paid WHERE Id = $id";
                 command.Parameters.Clear();
-                command.Parameters.AddWithValue("$archived", newArchive);
+                command.Parameters.AddWithValue("$paid", newPaid);
                 command.Parameters.AddWithValue("$id", id);
                 command.ExecuteNonQuery();
                 
-                return new ArchiveResult 
+                return new PaidResult 
                 { 
                     Success = true, 
-                    IsArchived = newArchive == 1 
+                    IsPaid = newPaid == 1 
                 };
             }
             
-            return new ArchiveResult 
+            return new PaidResult 
             { 
                 Success = false, 
                 Message = "Entry not found." 
             };
         }
 
-        public void DeleteUnlockedEntries()
+        public void DeleteUnbilledEntries()
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM TimeEntries WHERE Locked = 0 OR Locked IS NULL";
+            command.CommandText = "DELETE FROM TimeEntries WHERE Billed = 0 OR Billed IS NULL";
             command.ExecuteNonQuery();
         }
 
-        public int CountLockedEntries()
+        public int CountBilledEntries()
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(*) FROM TimeEntries WHERE Locked = 1";
+            command.CommandText = "SELECT COUNT(*) FROM TimeEntries WHERE Billed = 1";
             var result = command.ExecuteScalar();
             return result != null ? Convert.ToInt32(result) : 0;
         }
 
-        public int CountArchivedEntries()
+        public int CountPaidEntries()
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(*) FROM TimeEntries WHERE Archived = 1";
+            command.CommandText = "SELECT COUNT(*) FROM TimeEntries WHERE Paid = 1";
             var result = command.ExecuteScalar();
             return result != null ? Convert.ToInt32(result) : 0;
         }
 
-        public int CountUnlockedEntries()
+        public int CountUnbilledEntries()
         {
             using var connection = new SqliteConnection($"Data Source={dbPath}");
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(*) FROM TimeEntries WHERE Locked = 0 OR Locked IS NULL";
+            command.CommandText = "SELECT COUNT(*) FROM TimeEntries WHERE Billed = 0 OR Billed IS NULL";
             var result = command.ExecuteScalar();
             return result != null ? Convert.ToInt32(result) : 0;
         }
     }
 
-    public class ArchiveResult
+    public class PaidResult
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
-        public bool IsArchived { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

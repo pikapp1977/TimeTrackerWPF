@@ -146,11 +146,33 @@ namespace TimeTrackerWPF
                 )";
             command.ExecuteNonQuery();
 
-            command.CommandText = "ALTER TABLE TimeEntries ADD COLUMN Locked INTEGER DEFAULT 0";
+            command.CommandText = "ALTER TABLE TimeEntries ADD COLUMN Billed INTEGER DEFAULT 0";
             try { command.ExecuteNonQuery(); } catch { }
 
-            command.CommandText = "ALTER TABLE TimeEntries ADD COLUMN Archived INTEGER DEFAULT 0";
+            command.CommandText = "ALTER TABLE TimeEntries ADD COLUMN Paid INTEGER DEFAULT 0";
             try { command.ExecuteNonQuery(); } catch { }
+
+            // Migration: Copy data from old Locked/Archived columns to new Billed/Paid columns
+            command.CommandText = "PRAGMA table_info(TimeEntries)";
+            using var schemaReader = command.ExecuteReader();
+            var columns = new List<string>();
+            while (schemaReader.Read())
+            {
+                columns.Add(schemaReader.GetString(1));
+            }
+            schemaReader.Close();
+
+            if (columns.Contains("Locked") && columns.Contains("Billed"))
+            {
+                command.CommandText = "UPDATE TimeEntries SET Billed = Locked";
+                command.ExecuteNonQuery();
+            }
+
+            if (columns.Contains("Archived") && columns.Contains("Paid"))
+            {
+                command.CommandText = "UPDATE TimeEntries SET Paid = Archived";
+                command.ExecuteNonQuery();
+            }
 
             command.CommandText = @"
                 CREATE TABLE IF NOT EXISTS BusinessSettings (
@@ -187,10 +209,10 @@ namespace TimeTrackerWPF
             command.CommandText = "CREATE INDEX IF NOT EXISTS idx_timeentries_location ON TimeEntries(LocationId)";
             try { command.ExecuteNonQuery(); } catch { }
 
-            command.CommandText = "CREATE INDEX IF NOT EXISTS idx_timeentries_status ON TimeEntries(Locked, Archived)";
+            command.CommandText = "CREATE INDEX IF NOT EXISTS idx_timeentries_status ON TimeEntries(Billed, Paid)";
             try { command.ExecuteNonQuery(); } catch { }
 
-            command.CommandText = "CREATE INDEX IF NOT EXISTS idx_timeentries_invoice ON TimeEntries(LocationId, Date, Locked, Archived)";
+            command.CommandText = "CREATE INDEX IF NOT EXISTS idx_timeentries_invoice ON TimeEntries(LocationId, Date, Billed, Paid)";
             try { command.ExecuteNonQuery(); } catch { }
         }
 
@@ -228,11 +250,11 @@ namespace TimeTrackerWPF
             connection.Open();
             var command = connection.CreateCommand();
 
-            bool showArchived = chkShowArchived.IsChecked ?? false;
-            string whereClause = showArchived ? "" : "WHERE (t.Archived = 0 OR t.Archived IS NULL)";
+            bool showPaid = chkShowArchived.IsChecked ?? false;
+            string whereClause = showPaid ? "" : "WHERE (t.Paid = 0 OR t.Paid IS NULL)";
 
             command.CommandText = $@"
-                SELECT t.Id, t.LocationId, l.FacilityName, t.Date, t.ArrivalTime, t.DepartureTime, t.DailyPay, t.Notes, t.Locked, t.Archived
+                SELECT t.Id, t.LocationId, l.FacilityName, t.Date, t.ArrivalTime, t.DepartureTime, t.DailyPay, t.Notes, t.Billed, t.Paid
                 FROM TimeEntries t
                 JOIN Locations l ON t.LocationId = l.Id
                 {whereClause}
@@ -250,8 +272,8 @@ namespace TimeTrackerWPF
                     DepartureTime = reader.GetString(5),
                     DailyPay = (decimal)reader.GetDouble(6),
                     Notes = reader.IsDBNull(7) ? "" : reader.GetString(7),
-                    Locked = !reader.IsDBNull(8) && reader.GetInt32(8) == 1,
-                    Archived = !reader.IsDBNull(9) && reader.GetInt32(9) == 1
+                    Billed = !reader.IsDBNull(8) && reader.GetInt32(8) == 1,
+                    Paid = !reader.IsDBNull(9) && reader.GetInt32(9) == 1
                 });
             }
         }
@@ -364,7 +386,7 @@ namespace TimeTrackerWPF
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = @"
-                INSERT INTO TimeEntries (LocationId, Date, ArrivalTime, DepartureTime, DailyPay, Notes, Locked, Archived)
+                INSERT INTO TimeEntries (LocationId, Date, ArrivalTime, DepartureTime, DailyPay, Notes, Billed, Paid)
                 VALUES ($locationId, $date, $arrivalTime, $departureTime, $dailyPay, $notes, 0, 0)";
             command.Parameters.AddWithValue("$locationId", locationId);
             command.Parameters.AddWithValue("$date", date);
@@ -381,14 +403,13 @@ namespace TimeTrackerWPF
             connection.Open();
             var command = connection.CreateCommand();
 
-            // Check if entry is locked
-            command.CommandText = "SELECT Locked FROM TimeEntries WHERE Id = $id";
+            command.CommandText = "SELECT Billed FROM TimeEntries WHERE Id = $id";
             command.Parameters.AddWithValue("$id", id);
             var result = command.ExecuteScalar();
 
             if (result != null && Convert.ToInt32(result) == 1)
             {
-                MessageBox.Show("This entry is locked and cannot be deleted. Unlock it first.", "Cannot Delete", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("This entry is billed and cannot be deleted. Unbill it first.", "Cannot Delete", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -445,7 +466,7 @@ namespace TimeTrackerWPF
             decimal totalPay = 0;
             double totalHours = 0;
 
-            foreach (var entry in timeEntries.Where(e => !e.Archived))
+            foreach (var entry in timeEntries.Where(e => !e.Paid))
             {
                 totalPay += entry.DailyPay;
                 totalHours += double.Parse(entry.HoursWorked);
